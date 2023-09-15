@@ -17,8 +17,26 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(books) { book in
-                    Text(book.title ?? "Not")
+                ForEach(books, id: \.id) { book in
+                    NavigationLink {
+                        Text(book.title ?? "Unknown Title")
+                    } label: {
+                        HStack {
+                            EmojiRatingView(rating: book.rating)
+                                .font(.largeTitle)
+                            
+                            VStack(alignment: .leading) {
+                                Text(book.title ?? "Unknown Title")
+                                    .font(.headline)
+                                
+                                Text(book.author ?? "Unknown Author")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+                .onDelete { indexSet in
+                    print(indexSet)
                 }
             }
             .navigationTitle("Bookworm")
