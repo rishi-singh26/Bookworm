@@ -9,29 +9,39 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var students: FetchedResults<Student>
+    @FetchRequest(sortDescriptors: []) var books: FetchedResults<Book>
+    
+    @State private var showingAddBookSheet = false
+    
     
     var body: some View {
         NavigationView {
-            List(students) { student in
-                Text(student.name ?? "NA")
+            List {
+                ForEach(books) { book in
+                    Text(book.title ?? "Not")
+                }
             }
             .navigationTitle("Bookworm")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
-                    Button("Add") {
-                        let firstNames = ["Ginny", "Harry", "Hermione", "Luna", "Ron"]
-                        let lastNames = ["Granger", "Lovegood", "Potter", "Weasley"]
-                        let chosenFirstName = firstNames.randomElement()!
-                        let chosenLastName = lastNames.randomElement()!
-                        
-                        let student = Student(context: moc)
-                        student.id = UUID()
-                        student.name = "\(chosenFirstName) \(chosenLastName)"
-                        
-                        try? moc.save()
+                    HStack {
+                        Button {
+                            showingAddBookSheet.toggle()
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add book")
+                                    .font(.headline)
+                            }
+                        }
+                        Spacer()
+                        Text("\(books.count) Books")
+                            .font(.headline)
                     }
                 }
+            }
+            .sheet(isPresented: $showingAddBookSheet) {
+                AddBookView()
             }
         }
     }
