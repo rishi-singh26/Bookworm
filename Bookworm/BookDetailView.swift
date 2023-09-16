@@ -35,7 +35,7 @@ struct BookDetailView: View {
                         .font(.caption)
                         .padding([.bottom, .leading, .trailing], 7)
                 }
-                .background(.ultraThinMaterial.blendMode(.darken))
+                .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .offset(x: 5, y: -5)
             }

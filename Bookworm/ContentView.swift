@@ -36,6 +36,7 @@ struct ContentView: View {
                                     .foregroundColor(.secondary)
                             }
                         }
+                        .listRowBackground(Color(red: 1, green: 0.38, blue: 0.38, opacity: book.rating <= 2 ? 0.2 : 0))
                         .swipeActions(edge: .leading) {
                             Button {
                                 print("Editing Book")
@@ -48,6 +49,8 @@ struct ContentView: View {
                 }
                 .onDelete(perform: deleteBooks)
             }
+//            .scrollContentBackground(.hidden)
+//            .background(.indigo)
             .listStyle(.sidebar)
             .navigationTitle("Bookworm")
             .toolbar {

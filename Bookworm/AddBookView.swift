@@ -55,6 +55,7 @@ struct AddBookView: View {
                         newBook.rating = Int16(rating)
                         newBook.genre = genre
                         newBook.review = review
+                        newBook.createdOn = Date.now
                         
                         try? moc.save()
                         dismiss()
@@ -62,9 +63,21 @@ struct AddBookView: View {
                         Text("Save")
                             .font(.headline)
                     }
+                    .disabled(saveButtonDisabled)
                 }
             }
         }
+    }
+    
+    var saveButtonDisabled: Bool {
+        if isValid(string: title) && isValid(string: author) {
+            return false
+        }
+        return true
+    }
+    
+    func isValid(string text: String) -> Bool {
+        return !text.lowercased().trimmingCharacters(in: .whitespaces).isEmpty
     }
 }
 
