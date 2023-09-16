@@ -36,6 +36,14 @@ struct ContentView: View {
                                     .foregroundColor(.secondary)
                             }
                         }
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                print("Editing Book")
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.gray)
+                        }
                     }
                 }
                 .onDelete(perform: deleteBooks)
@@ -82,12 +90,12 @@ struct ContentView: View {
     }
     
     var searchResults: FetchedResults<Book> {
-            if searchText.isEmpty {
-                return books
-            } else {
-                return books
-            }
+        if searchText.isEmpty {
+            return books
+        } else {
+            return books
         }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
