@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BookDetailView: View {
     @Environment(\.managedObjectContext) var moc
+    @Environment(\.dismiss) var dismiss
     
     @State private var isEditingBook = false
     @State private var showDeleteAlert = false
@@ -58,14 +59,14 @@ struct BookDetailView: View {
                     Button {
                         showDeleteAlert = true
                     } label: {
-                        Image(systemName: "trash")
+                        Label("Delete book", systemImage: "trash")
                             .foregroundColor(.red)
                     }
                     Divider()
                     Button {
                         isEditingBook = true
                     } label: {
-                        Image(systemName: "pencil.circle")
+                        Label("Edit book", systemImage: "pencil.circle")
                     }
                 }
             }
@@ -74,9 +75,10 @@ struct BookDetailView: View {
             EditBookView(book: book)
         }
         .alert("Alert!", isPresented: $showDeleteAlert) {
-            Button("Yes", role: .destructive) {
+            Button("Delete", role: .destructive) {
                 moc.delete(book)
                 try? moc.save()
+                dismiss()
             }
             Button("Cancel", role: .cancel) {
                 print("canceling")
