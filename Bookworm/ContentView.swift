@@ -9,17 +9,20 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var books: FetchedResults<Book>
+    @FetchRequest(sortDescriptors: [
+        SortDescriptor(\.title),
+        SortDescriptor(\.author)
+    ]) var books: FetchedResults<Book>
     
     @State private var showingAddBookSheet = false
-    
+    @State private var searchText = ""
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(books, id: \.id) { book in
+                ForEach(searchResults) { book in
                     NavigationLink {
-                        BookDetail(book: book)
+                        BookDetailView(book: book)
                     } label: {
                         HStack {
                             EmojiRatingView(rating: book.rating)
@@ -35,10 +38,9 @@ struct ContentView: View {
                         }
                     }
                 }
-                .onDelete { indexSet in
-                    print(indexSet)
-                }
+                .onDelete(perform: deleteBooks)
             }
+            .listStyle(.sidebar)
             .navigationTitle("Bookworm")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -57,12 +59,35 @@ struct ContentView: View {
                             .font(.headline)
                     }
                 }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
             }
             .sheet(isPresented: $showingAddBookSheet) {
                 AddBookView()
             }
+            .searchable(text: $searchText)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
+    
+    func deleteBooks(at offsets: IndexSet) {
+        for offset in offsets {
+            let book = books[offset]
+            moc.delete(book)
+        }
+        
+        try? moc.save()
+    }
+    
+    var searchResults: FetchedResults<Book> {
+            if searchText.isEmpty {
+                return books
+            } else {
+                return books
+            }
+        }
 }
 
 struct ContentView_Previews: PreviewProvider {

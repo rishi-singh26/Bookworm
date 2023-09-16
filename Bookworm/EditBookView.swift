@@ -1,5 +1,5 @@
 //
-//  AddBookView.swift
+//  EditBookView.swift
 //  Bookworm
 //
 //  Created by Rishi Singh on 16/09/23.
@@ -7,17 +7,33 @@
 
 import SwiftUI
 
-struct AddBookView: View {
+struct EditBookView: View {
+    let book: Book
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
     @State private var title = ""
     @State private var author = ""
     @State private var rating = 2
-    @State private var genre = "Fantasy"
+    @State private var genre = ""
     @State private var review = ""
     
     let genres = ["Fantasy", "Horror", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
+    
+    init(book: Book) {
+        print(book.title!)
+        print(book.rating)
+        print(book.review!)
+        print(book.author!)
+        print(book.genre!)
+        
+        self.book = book
+        self.title = book.title ?? ""
+        self.author = book.author ?? ""
+        self.rating = Int(book.rating)
+        self.genre = book.genre ?? ""
+        self.review = book.review ?? ""
+    }
     
     var body: some View {
         NavigationView {
@@ -38,7 +54,7 @@ struct AddBookView: View {
                 }
                 
             }
-            .navigationTitle("Add book")
+            .navigationTitle("Edit book")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
@@ -49,7 +65,7 @@ struct AddBookView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         let newBook = Book(context: moc)
-                        newBook.id = UUID()
+                        newBook.id = book.id
                         newBook.title = title
                         newBook.author = author
                         newBook.rating = Int16(rating)
@@ -65,11 +81,5 @@ struct AddBookView: View {
                 }
             }
         }
-    }
-}
-
-struct AddBookView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddBookView()
     }
 }
